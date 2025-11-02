@@ -5,7 +5,7 @@ class FavoritoModel extends Database
   {
     $query = "CALL agregar_favoritos(?, ?)";
     $params = [
-      ["i", $id_publicacion], 
+      ["i", $id_publicacion],
       ["s", $correo]
     ];
     return $this->insert($query, $params);
@@ -23,11 +23,9 @@ class FavoritoModel extends Database
   {
     $query = "CALL  eliminar_favorito(?, ?)";
     $params = [
-      ["i", $id_publicacion], 
+      ["i", $id_publicacion],
       ['s', $correo]
     ];
     return $this->insert($query, $params);
   }
 }
-?>
-

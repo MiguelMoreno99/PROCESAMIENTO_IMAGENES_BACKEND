@@ -16,31 +16,27 @@ class UserModel extends Database
 
     public function insertUser($correo, $nombre, $apellido, $contra, $foto_perfil)
     {
-        //echo "existo";
         $query = "CALL insertar_usuario(?, ?, ?, ?, ?)";
         $params = [
-        ["s", $correo],        
-        ["s", $nombre],       
-        ["s", $apellido],     
-        ["s", $contra],       
-        ["s", $foto_perfil]        
+            ["s", $correo],
+            ["s", $nombre],
+            ["s", $apellido],
+            ["s", $contra],
+            ["s", $foto_perfil]
         ];
-
-        return $this->insert($query, $params); 
-       
+        return $this->insert($query, $params);
     }
 
     public function modifyUser($correo, $nombre, $apellido, $contra, $foto_perfil)
     {
         $query = "CALL editar_datos_usuario(?, ?, ?, ?, ?)";
         $params = [
-        ["s", $correo],        
-        ["s", $nombre],       
-        ["s", $apellido],     
-        ["s", $contra],       
-        ["s", $foto_perfil]  
+            ["s", $correo],
+            ["s", $nombre],
+            ["s", $apellido],
+            ["s", $contra],
+            ["s", $foto_perfil]
         ];
-
         return $this->insert($query, $params);
     }
 
@@ -48,10 +44,9 @@ class UserModel extends Database
     {
         $query = "CALL verificar_usuario(?, ?)";
         $params = [
-        ["s", $correo], 
-        ["s", $contra]
+            ["s", $correo],
+            ["s", $contra]
         ];
-
         return $this->selectMultipleParams($query, $params);
     }
 }

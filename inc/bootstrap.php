@@ -1,6 +1,4 @@
 <?php
-//define("PROJECT_ROOT_PATH", __DIR__ . "../");
-// include main configuration file 
 include "config.php";
 // include the base controller file 
 include "Controller/Api/BaseController.php";
@@ -10,4 +8,3 @@ include "Model/UserModel.php";
 include "Model/PublicacionModel.php";
 //include favorito model file
 include "Model/FavoritoModel.php";
-?>
