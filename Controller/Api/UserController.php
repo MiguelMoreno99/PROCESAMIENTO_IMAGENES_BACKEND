@@ -61,8 +61,41 @@ class UserController extends BaseController
             $contra = $inputData['contra'];
             $foto_perfil = $inputData['foto_perfil'];
 
+            $contra_hash = password_hash($contra, PASSWORD_DEFAULT);
+            if ($contra_hash === false) {
+                throw new Exception("Fallo al hashear la contraseña.");
+            }
+
+            $foto_url = null;
+
+            if (!empty($foto_perfil)) {
+                if (preg_match('/^data:image\/(\w+);base64,/', $foto_perfil, $type)) {
+                    $foto_perfil = substr($foto_perfil, strpos($foto_perfil, ',') + 1);
+                    $tipo_archivo = strtolower($type[1]);
+                    if (!in_array($tipo_archivo, ['jpg', 'jpeg', 'png', 'gif'])) {
+                        throw new Exception('Tipo de imagen no válido.');
+                    }
+                } else {
+                    $tipo_archivo = 'jpg';
+                }
+
+                $datos_imagen = base64_decode($foto_perfil);
+                if ($datos_imagen === false) {
+                    throw new Exception("Datos Base64 corruptos.");
+                }
+
+                $nombre_archivo = uniqid('foto_perfil_') . '_' . time() . '.' . $tipo_archivo;
+                $ruta_guardado = __DIR__ . '/../../img/' . $nombre_archivo;
+
+                if (file_put_contents($ruta_guardado, $datos_imagen)) {
+                    $foto_url = 'https://tuapi.com/uploads/perfil/' . $nombre_archivo;
+                } else {
+                    throw new Exception("No se pudo guardar la imagen de perfil en el servidor.");
+                }
+            }
+
             $userModel = new UserModel();
-            $result = $userModel->insertUser($correo, $nombre, $apellido, $contra, $foto_perfil);
+            $result = $userModel->insertUser($correo, $nombre, $apellido, $contra_hash, $foto_url);
 
             if ($result) {
                 $responseData = json_encode(["message" => "Usuario agregado exitosamente."]);
