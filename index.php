@@ -9,9 +9,9 @@ if ($uri[3] === 'user') {
     $objFeedController = new UserController();
     $strMethodName = $uri[4] . 'Action';
     $objFeedController->{$strMethodName}();
-} else if ($uri[3] === 'publicacion') {
-    include "Controller/Api/PublicacionController.php";
-    $objFeedController = new PublicacionController();
+} else if ($uri[3] === 'album') {
+    include "Controller/Api/AlbumController.php";
+    $objFeedController = new AlbumController();
     $strMethodName = $uri[4] . 'Action';
     $objFeedController->{$strMethodName}();
 } else if ($uri[3] === 'favorito') {

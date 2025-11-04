@@ -51,3 +51,22 @@ CREATE TABLE TABLA_FAVORITO (
         ON DELETE CASCADE -- Si se borra el jugador, se borra el favorito
         ON UPDATE CASCADE
 );
+
+CREATE TABLE TABLA_ESTAMPAS_USUARIO (
+    CORREO_USUARIO VARCHAR(255) NOT NULL,
+    UUID_JUGADOR CHAR(36) NOT NULL,
+    
+    PRIMARY KEY (CORREO_USUARIO, UUID_JUGADOR),
+    
+    CONSTRAINT fk_usuario_estampa
+        FOREIGN KEY (CORREO_USUARIO) 
+        REFERENCES TABLA_USUARIO(CORREO_USUARIO)
+        ON DELETE CASCADE -- Si se borra el usuario, se borra su inventario
+        ON UPDATE CASCADE,
+        
+    CONSTRAINT fk_jugador_estampa
+        FOREIGN KEY (UUID_JUGADOR)
+        REFERENCES TABLA_ESTAMPA_JUGADOR(UUID_JUGADOR)
+        ON DELETE CASCADE -- Si se borra la estampa maestra, se borra de los inventarios
+        ON UPDATE CASCADE
+);
