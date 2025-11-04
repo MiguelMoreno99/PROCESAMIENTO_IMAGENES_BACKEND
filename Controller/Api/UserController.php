@@ -88,7 +88,7 @@ class UserController extends BaseController
                 $ruta_guardado = __DIR__ . '/../../img/' . $nombre_archivo;
 
                 if (file_put_contents($ruta_guardado, $datos_imagen)) {
-                    $foto_url = 'https://tuapi.com/uploads/perfil/' . $nombre_archivo;
+                    $foto_url = API_BASE_URL . '/img/' . $nombre_archivo;
                 } else {
                     throw new Exception("No se pudo guardar la imagen de perfil en el servidor.");
                 }
@@ -176,8 +176,41 @@ class UserController extends BaseController
             $contra = $inputData['contra'];
             $foto_perfil = $inputData['foto_perfil'];
 
+            $contra_hash_para_db = null;
+            if (!empty($contra)) {
+                $contra_hash_para_db = password_hash($contra, PASSWORD_DEFAULT);
+                if ($contra_hash_para_db === false) {
+                    throw new Exception("Fallo al hashear la nueva contraseña.");
+                }
+            }
+
+            $foto_url_para_db = null;
+            if (preg_match('/^data:image\/(\w+);base64,/', $foto_perfil, $type)) {
+                $foto_base64_data = substr($foto_perfil, strpos($foto_perfil, ',') + 1);
+                $tipo_archivo = strtolower($type[1]);
+                if (!in_array($tipo_archivo, ['jpg', 'jpeg', 'png', 'gif'])) {
+                    throw new Exception('Tipo de imagen no válido.');
+                }
+
+                $datos_imagen = base64_decode($foto_base64_data);
+                if ($datos_imagen === false) {
+                    throw new Exception("Datos Base64 corruptos.");
+                }
+
+                $nombre_archivo = uniqid('foto_perfil_') . '_' . time() . '.' . $tipo_archivo;
+                $ruta_guardado = __DIR__ . '/../../img/' . $nombre_archivo;
+
+                if (file_put_contents($ruta_guardado, $datos_imagen)) {
+                    $foto_url_para_db = API_BASE_URL . '/img/' . $nombre_archivo;
+                } else {
+                    throw new Exception("No se pudo guardar la nueva imagen de perfil en el servidor.");
+                }
+            } else if (!empty($foto_input)) {
+                $foto_url_para_db = $foto_input;
+            }
+
             $userModel = new UserModel();
-            $result = $userModel->modifyUser($correo, $nombre, $apellido, $contra, $foto_perfil);
+            $result = $userModel->modifyUser($correo, $nombre, $apellido, $contra_hash_para_db, $foto_url_para_db);
 
             $arrUsers = $userModel->getUser($correo);
             $responseData = json_encode($arrUsers);
@@ -208,14 +241,22 @@ class UserController extends BaseController
             if (!isset($inputData['correo']) || !isset($inputData['contra'])) {
                 throw new Exception("Invalid input.");
             }
+
             $correo = $inputData['correo'];
             $contra = $inputData['contra'];
-
             $userModel = new UserModel();
-            $result = $userModel->verifyUser($correo, $contra);
-            if ($result['is_valid'] === 1) {
-                $responseData = json_encode(["message" => "Credenciales válidas."]);
-                $statusHeader = 'HTTP/1.1 200 OK';
+            $arrUsers = $userModel->getUser($correo);
+            $userData = $arrUsers[0] ?? null;
+
+            if ($userData && isset($userData['CONTRASEÑA_USUARIO'])) {
+                $hash_from_db = $userData['CONTRASEÑA_USUARIO'];
+                if (password_verify($contra, $hash_from_db)) {
+                    $responseData = json_encode(["message" => "Credenciales válidas."]);
+                    $statusHeader = 'HTTP/1.1 200 OK';
+                } else {
+                    $responseData = json_encode(["message" => "Credenciales no válidas."]);
+                    $statusHeader = 'HTTP/1.1 401 Unauthorized';
+                }
             } else {
                 $responseData = json_encode(["message" => "Credenciales no válidas."]);
                 $statusHeader = 'HTTP/1.1 401 Unauthorized';

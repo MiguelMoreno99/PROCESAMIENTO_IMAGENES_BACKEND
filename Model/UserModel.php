@@ -4,7 +4,7 @@ class UserModel extends Database
 {
     public function getUsers($limit)
     {
-        return $this->select("SELECT * FROM Usuarios LIMIT ?", ["i", $limit]);
+        return $this->select("SELECT * FROM TABLA_USUARIO LIMIT ?", ["i", $limit]);
     }
 
     public function getUser($correo)
@@ -38,15 +38,5 @@ class UserModel extends Database
             ["s", $foto_perfil]
         ];
         return $this->insert($query, $params);
-    }
-
-    public function verifyUser($correo, $contra)
-    {
-        $query = "CALL verificar_usuario(?, ?)";
-        $params = [
-            ["s", $correo],
-            ["s", $contra]
-        ];
-        return $this->selectMultipleParams($query, $params);
     }
 }
