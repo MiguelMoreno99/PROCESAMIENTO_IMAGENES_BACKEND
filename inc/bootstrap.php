@@ -4,7 +4,7 @@ include "config.php";
 include "Controller/Api/BaseController.php";
 // include the use model file 
 include "Model/UserModel.php";
-//include publicacion model file
-include "Model/PublicacionModel.php";
+//include album model file
+include "Model/AlbumModel.php";
 //include favorito model file
 include "Model/FavoritoModel.php";

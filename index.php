@@ -23,3 +23,5 @@ if ($uri[3] === 'user') {
     header("HTTP/1.1 404 Not Found");
     exit();
 }
+
+//Si hay tiempo, agregar EstampaController para manejar estampas de forma individual

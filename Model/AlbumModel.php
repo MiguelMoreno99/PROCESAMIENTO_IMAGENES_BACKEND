@@ -6,7 +6,7 @@ class AlbumModel extends Database
   {
     $query = "CALL reclamar_estampa_usuario(?, ?)";
     $params = [
-      ["s", $uuid_jugador], // El UUID de la estampa
+      ["s", $uuid_jugador],
       ["s", $correo]
     ];
     return $this->insert($query, $params);
@@ -23,16 +23,6 @@ class AlbumModel extends Database
     $params = ["s", $correo];
 
     return $this->select($query, $params);
-  }
-
-  public function deletePublicacion($id_publicacion, $correo)
-  {
-    $query = "CALL eliminar_publicacion(?, ?)";
-    $params = [
-      ["i", $id_publicacion],
-      ["s", $correo]
-    ];
-    return $this->insert($query, $params);
   }
 
   public function deleteEstampaUsuario($uuid_jugador, $correo)

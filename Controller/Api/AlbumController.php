@@ -71,7 +71,7 @@ class AlbumController extends BaseController
     }
   }
 
-  public function listarPorUsuarioAction()
+  public function listUserAction()
   {
     $strErrorDesc = '';
     $responseData = '';
