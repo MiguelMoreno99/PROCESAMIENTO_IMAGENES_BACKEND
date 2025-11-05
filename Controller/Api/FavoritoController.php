@@ -13,19 +13,19 @@ class FavoritoController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['id_publicacion']) || !isset($inputData['correo'])) {
+      if (!isset($inputData['uuid_jugador']) || !isset($inputData['correo'])) {
         throw new Exception("Invalid input.");
       }
 
-      $id_publicacion = $inputData['id_publicacion'];
+      $uuid_jugador = $inputData['uuid_jugador'];
       $correo = $inputData['correo'];
 
       $FavoritoModel = new FavoritoModel();
-      $result = $FavoritoModel->insertFavorito($id_publicacion, $correo);
+      $result = $FavoritoModel->insertFavorito($uuid_jugador, $correo);
       if ($result) {
-        $responseData = json_encode(["message" => "Favorito agregada exitosamente"]);
+        $responseData = json_encode(["message" => "Favorito agregado exitosamente"]);
       } else {
-        throw new Exception("Fallo insertar nueva publicacion.");
+        throw new Exception("Fallo insertar nuevo favorito.");
       }
     } catch (Exception $e) {
       $strErrorDesc = $e->getMessage();
@@ -58,16 +58,6 @@ class FavoritoController extends BaseController
 
       $FavoritoModel = new FavoritoModel();
       $arrUsers = $FavoritoModel->getFavorito($correo);
-      if ($arrUsers && is_array($arrUsers)) {
-        foreach ($arrUsers as &$record) {
-          if (!empty($record['foto_proceso'])) {
-            $record['foto_proceso'] = explode('|', $record['foto_proceso']);
-          } else {
-            $record['foto_proceso'] = [];
-          }
-        }
-        unset($record);
-      }
       $responseData = json_encode($arrUsers);
     } catch (Error $e) {
       $strErrorDesc = $e->getMessage() . 'Something went wrong! Please contact support.';
@@ -96,18 +86,18 @@ class FavoritoController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['id_publicacion']) || !isset($inputData['correo'])) {
+      if (!isset($inputData['uuid_jugador']) || !isset($inputData['correo'])) {
         throw new Exception("Invalid input.");
       }
-      $id_publicacion = $inputData['id_publicacion'];
+      $uuid_jugador = $inputData['uuid_jugador'];
       $correo = $inputData['correo'];
 
       $FavoritoModel = new FavoritoModel();
-      $result = $FavoritoModel->deleteFavorito($id_publicacion, $correo);
+      $result = $FavoritoModel->deleteFavorito($uuid_jugador, $correo);
       if ($result) {
-        $responseData = json_encode(["message" => "Favorito eliminada exitosamente"]);
+        $responseData = json_encode(["message" => "Favorito eliminado exitosamente"]);
       } else {
-        throw new Exception("Fallo eliminar nueva publicacion.");
+        throw new Exception("Fallo eliminar favorito.");
       }
     } catch (Exception $e) {
       $strErrorDesc = $e->getMessage();

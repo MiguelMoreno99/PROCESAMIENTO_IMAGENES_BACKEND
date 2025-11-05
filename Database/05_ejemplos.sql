@@ -80,6 +80,8 @@ uuid(),
 
 select * from tabla_estampa_jugador;
 
+-- ALBUM DE EJEMPLO
+
 CALL reclamar_estampa_usuario("9fde6c3c-b9ee-11f0-8c89-18c04d6599ee","CORREO@EJEMPO.COM");
 
 CALL traer_todas_estampas();
@@ -89,3 +91,18 @@ CALL listar_estampas_usuario("CORREO@EJEMPO.COM");
 CALL eliminar_estampa_usuario("9fde6c3c-b9ee-11f0-8c89-18c04d6599ee","CORREO@EJEMPO.COM");
 
 select * from tabla_estampas_usuario;
+
+-- FAVORITOS DE EJEMPLO
+
+CALL agregar_favoritos("9fde6c3c-b9ee-11f0-8c89-18c04d6599ee","CORREO@EJEMPO.COM");
+
+CALL mostrar_favoritos_por_usuarios("CORREO@EJEMPO.COM");
+
+CALL eliminar_favorito("9fde6c3c-b9ee-11f0-8c89-18c04d6599ee","CORREO@EJEMPO.COM");
+
+-- TODOS LOS SELECT
+
+select * from tabla_estampas_usuario;
+select * from tabla_estampa_jugador;
+select * from tabla_usuario;
+select * from tabla_favorito;
