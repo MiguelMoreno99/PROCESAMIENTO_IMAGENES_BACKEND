@@ -2,12 +2,12 @@
 
 class AlbumModel extends Database
 {
-  public function reclamarEstampa($uuid_jugador, $correo)
+  public function reclamarEstampa($UUID_JUGADOR, $CORREO_USUARIO)
   {
     $query = "CALL reclamar_estampa_usuario(?, ?)";
     $params = [
-      ["s", $uuid_jugador],
-      ["s", $correo]
+      ["s", $UUID_JUGADOR],
+      ["s", $CORREO_USUARIO]
     ];
     return $this->insert($query, $params);
   }
@@ -17,20 +17,20 @@ class AlbumModel extends Database
     return $this->select("CALL traer_todas_estampas()");
   }
 
-  public function getEstampasUsuario($correo)
+  public function getEstampasUsuario($CORREO_USUARIO)
   {
     $query = "CALL listar_estampas_usuario(?)";
-    $params = ["s", $correo];
+    $params = ["s", $CORREO_USUARIO];
 
     return $this->select($query, $params);
   }
 
-  public function deleteEstampaUsuario($uuid_jugador, $correo)
+  public function deleteEstampaUsuario($UUID_JUGADOR, $CORREO_USUARIO)
   {
     $query = "CALL  eliminar_estampa_usuario(?, ?)";
     $params = [
-      ["s", $uuid_jugador],
-      ['s', $correo]
+      ["s", $UUID_JUGADOR],
+      ['s', $CORREO_USUARIO]
     ];
     return $this->insert($query, $params);
   }

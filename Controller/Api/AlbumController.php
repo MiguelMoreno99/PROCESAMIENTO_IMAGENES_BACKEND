@@ -13,15 +13,15 @@ class AlbumController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['uuid_jugador']) || !isset($inputData['correo'])) {
-        throw new Exception("Invalid input. 'uuid_jugador' y 'correo' son requeridos.");
+      if (!isset($inputData['UUID_JUGADOR']) || !isset($inputData['CORREO_USUARIO'])) {
+        throw new Exception("Invalid input. 'UUID_JUGADOR' y 'correo' son requeridos.");
       }
 
-      $uuid_jugador = $inputData['uuid_jugador'];
-      $correo = $inputData['correo'];
+      $UUID_JUGADOR = $inputData['UUID_JUGADOR'];
+      $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
       $albumModel = new AlbumModel();
-      $result = $albumModel->reclamarEstampa($uuid_jugador, $correo);
+      $result = $albumModel->reclamarEstampa($UUID_JUGADOR, $CORREO_USUARIO);
 
       if ($result) {
         $responseData = json_encode(["message" => "Estampa reclamada exitosamente"]);
@@ -83,14 +83,14 @@ class AlbumController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['correo'])) {
+      if (!isset($inputData['CORREO_USUARIO'])) {
         throw new Exception("Invalid input. 'correo' es requerido.");
       }
 
-      $correo = $inputData['correo'];
+      $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
       $albumModel = new AlbumModel();
-      $arrEstampas = $albumModel->getEstampasUsuario($correo);
+      $arrEstampas = $albumModel->getEstampasUsuario($CORREO_USUARIO);
 
       $responseData = json_encode($arrEstampas);
     } catch (Error $e) {
@@ -120,14 +120,14 @@ class AlbumController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['uuid_estampa']) || !isset($inputData['correo'])) {
+      if (!isset($inputData['UUID_JUGADOR']) || !isset($inputData['CORREO_USUARIO'])) {
         throw new Exception("Invalid input.");
       }
-      $uuid_estampa = $inputData['uuid_estampa'];
-      $correo = $inputData['correo'];
+      $UUID_JUGADOR = $inputData['UUID_JUGADOR'];
+      $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
       $AlbumModel = new AlbumModel();
-      $result = $AlbumModel->deleteEstampaUsuario($uuid_estampa, $correo);
+      $result = $AlbumModel->deleteEstampaUsuario($UUID_JUGADOR, $CORREO_USUARIO);
       if ($result) {
         $responseData = json_encode(["message" => "Estampa eliminada exitosamente"]);
       } else {

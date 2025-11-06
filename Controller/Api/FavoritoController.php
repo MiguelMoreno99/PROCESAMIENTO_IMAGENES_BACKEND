@@ -13,15 +13,15 @@ class FavoritoController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['uuid_jugador']) || !isset($inputData['correo'])) {
+      if (!isset($inputData['UUID_JUGADOR']) || !isset($inputData['CORREO_USUARIO'])) {
         throw new Exception("Invalid input.");
       }
 
-      $uuid_jugador = $inputData['uuid_jugador'];
-      $correo = $inputData['correo'];
+      $UUID_JUGADOR = $inputData['UUID_JUGADOR'];
+      $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
       $FavoritoModel = new FavoritoModel();
-      $result = $FavoritoModel->insertFavorito($uuid_jugador, $correo);
+      $result = $FavoritoModel->insertFavorito($UUID_JUGADOR, $CORREO_USUARIO);
       if ($result) {
         $responseData = json_encode(["message" => "Favorito agregado exitosamente"]);
       } else {
@@ -50,14 +50,14 @@ class FavoritoController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['correo'])) {
+      if (!isset($inputData['CORREO_USUARIO'])) {
         throw new Exception("Invalid input.");
       }
 
-      $correo = $inputData['correo'];
+      $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
       $FavoritoModel = new FavoritoModel();
-      $arrUsers = $FavoritoModel->getFavorito($correo);
+      $arrUsers = $FavoritoModel->getFavorito($CORREO_USUARIO);
       $responseData = json_encode($arrUsers);
     } catch (Error $e) {
       $strErrorDesc = $e->getMessage() . 'Something went wrong! Please contact support.';
@@ -86,14 +86,14 @@ class FavoritoController extends BaseController
         throw new Exception("Method not supported.");
       }
 
-      if (!isset($inputData['uuid_jugador']) || !isset($inputData['correo'])) {
+      if (!isset($inputData['UUID_JUGADOR']) || !isset($inputData['CORREO_USUARIO'])) {
         throw new Exception("Invalid input.");
       }
-      $uuid_jugador = $inputData['uuid_jugador'];
-      $correo = $inputData['correo'];
+      $UUID_JUGADOR = $inputData['UUID_JUGADOR'];
+      $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
       $FavoritoModel = new FavoritoModel();
-      $result = $FavoritoModel->deleteFavorito($uuid_jugador, $correo);
+      $result = $FavoritoModel->deleteFavorito($UUID_JUGADOR, $CORREO_USUARIO);
       if ($result) {
         $responseData = json_encode(["message" => "Favorito eliminado exitosamente"]);
       } else {

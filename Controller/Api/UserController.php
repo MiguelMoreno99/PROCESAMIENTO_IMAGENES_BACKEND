@@ -48,29 +48,29 @@ class UserController extends BaseController
                 throw new Exception("Method not supported.");
             }
             if (
-                !isset($inputData['correo']) || !isset($inputData['nombre']) ||
-                !isset($inputData['apellido']) || !isset($inputData['contra']) ||
-                !isset($inputData['foto_perfil'])
+                !isset($inputData['CORREO_USUARIO']) || !isset($inputData['NOMBRE_USUARIO']) ||
+                !isset($inputData['APELLIDO_USUARIO']) || !isset($inputData['CONTRASEÑA_USUARIO']) ||
+                !isset($inputData['FOTO_PERFIL_USUARIO'])
             ) {
                 throw new Exception("Invalid input.");
             }
 
-            $correo = $inputData['correo'];
-            $nombre = $inputData['nombre'];
-            $apellido = $inputData['apellido'];
-            $contra = $inputData['contra'];
-            $foto_perfil = $inputData['foto_perfil'];
+            $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
+            $NOMBRE_USUARIO = $inputData['NOMBRE_USUARIO'];
+            $APELLIDO_USUARIO = $inputData['APELLIDO_USUARIO'];
+            $CONTRASEÑA_USUARIO = $inputData['CONTRASEÑA_USUARIO'];
+            $FOTO_PERFIL_USUARIO = $inputData['FOTO_PERFIL_USUARIO'];
 
-            $contra_hash = password_hash($contra, PASSWORD_DEFAULT);
+            $contra_hash = password_hash($CONTRASEÑA_USUARIO, PASSWORD_DEFAULT);
             if ($contra_hash === false) {
                 throw new Exception("Fallo al hashear la contraseña.");
             }
 
             $foto_url = null;
 
-            if (!empty($foto_perfil)) {
-                if (preg_match('/^data:image\/(\w+);base64,/', $foto_perfil, $type)) {
-                    $foto_perfil = substr($foto_perfil, strpos($foto_perfil, ',') + 1);
+            if (!empty($FOTO_PERFIL_USUARIO)) {
+                if (preg_match('/^data:image\/(\w+);base64,/', $FOTO_PERFIL_USUARIO, $type)) {
+                    $FOTO_PERFIL_USUARIO = substr($FOTO_PERFIL_USUARIO, strpos($FOTO_PERFIL_USUARIO, ',') + 1);
                     $tipo_archivo = strtolower($type[1]);
                     if (!in_array($tipo_archivo, ['jpg', 'jpeg', 'png', 'gif'])) {
                         throw new Exception('Tipo de imagen no válido.');
@@ -79,7 +79,7 @@ class UserController extends BaseController
                     $tipo_archivo = 'jpg';
                 }
 
-                $datos_imagen = base64_decode($foto_perfil);
+                $datos_imagen = base64_decode($FOTO_PERFIL_USUARIO);
                 if ($datos_imagen === false) {
                     throw new Exception("Datos Base64 corruptos.");
                 }
@@ -95,7 +95,7 @@ class UserController extends BaseController
             }
 
             $userModel = new UserModel();
-            $result = $userModel->insertUser($correo, $nombre, $apellido, $contra_hash, $foto_url);
+            $result = $userModel->insertUser($CORREO_USUARIO, $NOMBRE_USUARIO, $APELLIDO_USUARIO, $contra_hash, $foto_url);
 
             if ($result) {
                 $responseData = json_encode(["message" => "Usuario agregado exitosamente."]);
@@ -126,14 +126,14 @@ class UserController extends BaseController
                 throw new Exception("Method not supported.");
             }
 
-            if (!isset($inputData['correo'])) {
+            if (!isset($inputData['CORREO_USUARIO'])) {
                 throw new Exception("Invalid input.");
             }
 
-            $correo = $inputData['correo'];
+            $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
 
             $userModel = new UserModel();
-            $arrUsers = $userModel->getUser($correo);
+            $arrUsers = $userModel->getUser($CORREO_USUARIO);
             $responseData = json_encode($arrUsers);
         } catch (Error $e) {
             $strErrorDesc = $e->getMessage() . 'Something went wrong! Please contact support.';
@@ -163,30 +163,30 @@ class UserController extends BaseController
             }
 
             if (
-                !isset($inputData['correo']) || !isset($inputData['nombre']) ||
-                !isset($inputData['apellido']) || !isset($inputData['contra']) ||
-                !isset($inputData['foto_perfil'])
+                !isset($inputData['CORREO_USUARIO']) || !isset($inputData['NOMBRE_USUARIO']) ||
+                !isset($inputData['APELLIDO_USUARIO']) || !isset($inputData['CONTRASEÑA_USUARIO']) ||
+                !isset($inputData['FOTO_PERFIL_USUARIO'])
             ) {
                 throw new Exception("Invalid input.");
             }
 
-            $correo = $inputData['correo'];
-            $nombre = $inputData['nombre'];
-            $apellido = $inputData['apellido'];
-            $contra = $inputData['contra'];
-            $foto_perfil = $inputData['foto_perfil'];
+            $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
+            $NOMBRE_USUARIO = $inputData['NOMBRE_USUARIO'];
+            $APELLIDO_USUARIO = $inputData['APELLIDO_USUARIO'];
+            $CONTRASEÑA_USUARIO = $inputData['CONTRASEÑA_USUARIO'];
+            $FOTO_PERFIL_USUARIO = $inputData['FOTO_PERFIL_USUARIO'];
 
             $contra_hash_para_db = null;
-            if (!empty($contra)) {
-                $contra_hash_para_db = password_hash($contra, PASSWORD_DEFAULT);
+            if (!empty($CONTRASEÑA_USUARIO)) {
+                $contra_hash_para_db = password_hash($CONTRASEÑA_USUARIO, PASSWORD_DEFAULT);
                 if ($contra_hash_para_db === false) {
                     throw new Exception("Fallo al hashear la nueva contraseña.");
                 }
             }
 
             $foto_url_para_db = null;
-            if (preg_match('/^data:image\/(\w+);base64,/', $foto_perfil, $type)) {
-                $foto_base64_data = substr($foto_perfil, strpos($foto_perfil, ',') + 1);
+            if (preg_match('/^data:image\/(\w+);base64,/', $FOTO_PERFIL_USUARIO, $type)) {
+                $foto_base64_data = substr($FOTO_PERFIL_USUARIO, strpos($FOTO_PERFIL_USUARIO, ',') + 1);
                 $tipo_archivo = strtolower($type[1]);
                 if (!in_array($tipo_archivo, ['jpg', 'jpeg', 'png', 'gif'])) {
                     throw new Exception('Tipo de imagen no válido.');
@@ -210,9 +210,9 @@ class UserController extends BaseController
             }
 
             $userModel = new UserModel();
-            $result = $userModel->modifyUser($correo, $nombre, $apellido, $contra_hash_para_db, $foto_url_para_db);
+            $result = $userModel->modifyUser($CORREO_USUARIO, $NOMBRE_USUARIO, $APELLIDO_USUARIO, $contra_hash_para_db, $foto_url_para_db);
 
-            $arrUsers = $userModel->getUser($correo);
+            $arrUsers = $userModel->getUser($CORREO_USUARIO);
             $responseData = json_encode($arrUsers);
         } catch (Exception $e) {
             $strErrorDesc = $e->getMessage();
@@ -238,19 +238,19 @@ class UserController extends BaseController
                 throw new Exception("Method not supported.");
             }
 
-            if (!isset($inputData['correo']) || !isset($inputData['contra'])) {
+            if (!isset($inputData['CORREO_USUARIO']) || !isset($inputData['CONTRASEÑA_USUARIO'])) {
                 throw new Exception("Invalid input.");
             }
 
-            $correo = $inputData['correo'];
-            $contra = $inputData['contra'];
+            $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
+            $CONTRASEÑA_USUARIO = $inputData['CONTRASEÑA_USUARIO'];
             $userModel = new UserModel();
-            $arrUsers = $userModel->getUser($correo);
+            $arrUsers = $userModel->getUser($CORREO_USUARIO);
             $userData = $arrUsers[0] ?? null;
 
             if ($userData && isset($userData['CONTRASEÑA_USUARIO'])) {
                 $hash_from_db = $userData['CONTRASEÑA_USUARIO'];
-                if (password_verify($contra, $hash_from_db)) {
+                if (password_verify($CONTRASEÑA_USUARIO, $hash_from_db)) {
                     $responseData = json_encode(["message" => "Credenciales válidas."]);
                     $statusHeader = 'HTTP/1.1 200 OK';
                 } else {

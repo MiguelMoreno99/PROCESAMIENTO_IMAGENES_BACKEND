@@ -1,30 +1,30 @@
 <?php
 class FavoritoModel extends Database
 {
-  public function insertFavorito($uuid_jugador, $correo)
+  public function insertFavorito($UUID_JUGADOR, $CORREO_USUARIO)
   {
     $query = "CALL agregar_favoritos(?, ?)";
     $params = [
-      ["s", $uuid_jugador],
-      ["s", $correo]
+      ["s", $UUID_JUGADOR],
+      ["s", $CORREO_USUARIO]
     ];
     return $this->insert($query, $params);
   }
 
-  public function getFavorito($correo)
+  public function getFavorito($CORREO_USUARIO)
   {
     $query = "CALL mostrar_favoritos_por_usuarios(?)";
-    $params = ["s", $correo];
+    $params = ["s", $CORREO_USUARIO];
 
     return $this->select($query, $params);
   }
 
-  public function deleteFavorito($uuid_jugador, $correo)
+  public function deleteFavorito($UUID_JUGADOR, $CORREO_USUARIO)
   {
     $query = "CALL  eliminar_favorito(?, ?)";
     $params = [
-      ["s", $uuid_jugador],
-      ['s', $correo]
+      ["s", $UUID_JUGADOR],
+      ['s', $CORREO_USUARIO]
     ];
     return $this->insert($query, $params);
   }
