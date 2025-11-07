@@ -60,12 +60,6 @@ class UserController extends BaseController
             $APELLIDO_USUARIO = $inputData['APELLIDO_USUARIO'];
             $CONTRASEÑA_USUARIO = $inputData['CONTRASEÑA_USUARIO'];
             $FOTO_PERFIL_USUARIO = $inputData['FOTO_PERFIL_USUARIO'];
-
-            $contra_hash = password_hash($CONTRASEÑA_USUARIO, PASSWORD_DEFAULT);
-            if ($contra_hash === false) {
-                throw new Exception("Fallo al hashear la contraseña.");
-            }
-
             $foto_url = null;
 
             if (!empty($FOTO_PERFIL_USUARIO)) {
@@ -95,7 +89,7 @@ class UserController extends BaseController
             }
 
             $userModel = new UserModel();
-            $result = $userModel->insertUser($CORREO_USUARIO, $NOMBRE_USUARIO, $APELLIDO_USUARIO, $contra_hash, $foto_url);
+            $result = $userModel->insertUser($CORREO_USUARIO, $NOMBRE_USUARIO, $APELLIDO_USUARIO, $CONTRASEÑA_USUARIO, $foto_url);
 
             if ($result) {
                 $responseData = json_encode(["message" => "Usuario agregado exitosamente."]);
@@ -175,16 +169,8 @@ class UserController extends BaseController
             $APELLIDO_USUARIO = $inputData['APELLIDO_USUARIO'];
             $CONTRASEÑA_USUARIO = $inputData['CONTRASEÑA_USUARIO'];
             $FOTO_PERFIL_USUARIO = $inputData['FOTO_PERFIL_USUARIO'];
-
-            $contra_hash_para_db = null;
-            if (!empty($CONTRASEÑA_USUARIO)) {
-                $contra_hash_para_db = password_hash($CONTRASEÑA_USUARIO, PASSWORD_DEFAULT);
-                if ($contra_hash_para_db === false) {
-                    throw new Exception("Fallo al hashear la nueva contraseña.");
-                }
-            }
-
             $foto_url_para_db = null;
+
             if (preg_match('/^data:image\/(\w+);base64,/', $FOTO_PERFIL_USUARIO, $type)) {
                 $foto_base64_data = substr($FOTO_PERFIL_USUARIO, strpos($FOTO_PERFIL_USUARIO, ',') + 1);
                 $tipo_archivo = strtolower($type[1]);
@@ -210,7 +196,7 @@ class UserController extends BaseController
             }
 
             $userModel = new UserModel();
-            $result = $userModel->modifyUser($CORREO_USUARIO, $NOMBRE_USUARIO, $APELLIDO_USUARIO, $contra_hash_para_db, $foto_url_para_db);
+            $result = $userModel->modifyUser($CORREO_USUARIO, $NOMBRE_USUARIO, $APELLIDO_USUARIO, $CONTRASEÑA_USUARIO, $foto_url_para_db);
 
             $arrUsers = $userModel->getUser($CORREO_USUARIO);
             $responseData = json_encode($arrUsers);
@@ -249,8 +235,7 @@ class UserController extends BaseController
             $userData = $arrUsers[0] ?? null;
 
             if ($userData && isset($userData['CONTRASEÑA_USUARIO'])) {
-                $hash_from_db = $userData['CONTRASEÑA_USUARIO'];
-                if (password_verify($CONTRASEÑA_USUARIO, $hash_from_db)) {
+                if ($CONTRASEÑA_USUARIO === $userData['CONTRASEÑA_USUARIO']) {
                     $responseData = json_encode(["message" => "Credenciales válidas."]);
                     $statusHeader = 'HTTP/1.1 200 OK';
                 } else {
