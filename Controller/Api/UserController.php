@@ -40,6 +40,7 @@ class UserController extends BaseController
     {
         $strErrorDesc = '';
         $responseData = '';
+        $strErrorHeader = 'HTTP/1.1 201 OK';
         try {
             $requestMethod = $_SERVER["REQUEST_METHOD"];
             $inputData = json_decode(file_get_contents("php://input"), true);
@@ -97,8 +98,14 @@ class UserController extends BaseController
                 throw new Exception("Fallo insertar nuevo usuario.");
             }
         } catch (Exception $e) {
-            $strErrorDesc = $e->getMessage();
-            $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            $errorMessage = $e->getMessage();
+            if (strpos($errorMessage, 'Duplicate entry') !== false && strpos($errorMessage, 'PRIMARY') !== false) {
+                $responseData = json_encode(["message" => "Ya existe este usuario!"]);
+                $strErrorHeader = 'HTTP/1.1 200 OK';
+            } else {
+                $strErrorDesc = $errorMessage;
+                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            }
         }
 
         if (!$strErrorDesc) {

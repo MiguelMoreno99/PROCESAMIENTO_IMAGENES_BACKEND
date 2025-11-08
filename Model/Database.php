@@ -88,7 +88,7 @@ class Database
             $stmt->execute();
             return $stmt;
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
+            // echo "Error: " . $e->getMessage();
             throw new Exception($e->getMessage());
         }
     }
