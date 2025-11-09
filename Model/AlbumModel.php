@@ -12,6 +12,13 @@ class AlbumModel extends Database
     return $this->insert($query, $params);
   }
 
+  public function verificarEstampaReclamada($UUID_JUGADOR)
+  {
+    $query = "CALL verificar_estampa_reclamada(?)";
+    $params = ["s", $UUID_JUGADOR];
+    return $this->select($query, $params);
+  }
+
   public function getTodasEstampas()
   {
     return $this->select("CALL traer_todas_estampas()");

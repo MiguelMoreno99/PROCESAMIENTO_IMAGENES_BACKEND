@@ -5,45 +5,54 @@ class AlbumController extends BaseController
   {
     $strErrorDesc = '';
     $responseData = '';
-    $strErrorHeader = 'HTTP/1.1 201 OK';
+    $httpHeaders = ['Content-Type: application/json'];
     try {
       $requestMethod = $_SERVER["REQUEST_METHOD"];
       $inputData = json_decode(file_get_contents("php://input"), true);
 
       if (strtoupper($requestMethod) != 'POST') {
+        array_push($httpHeaders, 'HTTP/1.1 405 Method Not Allowed');
         throw new Exception("Method not supported.");
       }
 
       if (!isset($inputData['UUID_JUGADOR']) || !isset($inputData['CORREO_USUARIO'])) {
+        array_push($httpHeaders, 'HTTP/1.1 400 Bad Request');
         throw new Exception("Invalid input. 'UUID_JUGADOR' y 'correo' son requeridos.");
       }
 
       $UUID_JUGADOR = $inputData['UUID_JUGADOR'];
       $CORREO_USUARIO = $inputData['CORREO_USUARIO'];
-
       $albumModel = new AlbumModel();
+
+      $estampaExistente = $albumModel->verificarEstampaReclamada($UUID_JUGADOR);
+
+      if (!empty($estampaExistente)) {
+        $correoDueño = $estampaExistente[0]['CORREO_USUARIO'];
+        if ($correoDueño == $CORREO_USUARIO) {
+          array_push($httpHeaders, 'HTTP/1.1 200 OK');
+          throw new Exception("Ya tienes esta estampa!");
+        } else {
+          array_push($httpHeaders, 'HTTP/1.1 200 OK');
+          throw new Exception("Esta estampa ya está reclamada por alguien más.");
+        }
+      }
+
       $result = $albumModel->reclamarEstampa($UUID_JUGADOR, $CORREO_USUARIO);
 
       if ($result) {
         $responseData = json_encode(["message" => "Estampa reclamada exitosamente"]);
+        array_push($httpHeaders, 'HTTP/1.1 200 OK');
       } else {
-        throw new Exception("Fallo al reclamar la estampa. (¿Quizás ya la tienes?)");
+        throw new Exception("Fallo al reclamar la estampa.");
       }
     } catch (Exception $e) {
-      $errorMessage = $e->getMessage();
-      if (strpos($errorMessage, 'Duplicate entry') !== false && strpos($errorMessage, 'PRIMARY') !== false) {
-        $responseData = json_encode(["message" => "Ya tienes esta estampa!"]);
-        $strErrorHeader = 'HTTP/1.1 200 OK';
-      } else {
-        $strErrorDesc = $errorMessage;
-        $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+      $strErrorDesc = $e->getMessage();
+      if (count(preg_grep('/^HTTP\//', $httpHeaders)) == 0) {
+        array_push($httpHeaders, 'HTTP/1.1 500 Internal Server Error');
       }
+      $responseData = json_encode(["message" => $strErrorDesc]);
     }
-    if (!$strErrorDesc) {
-      $this->sendOutput($responseData, ['Content-Type: application/json', 'HTTP/1.1 201 OK']);
-    } else {
-      $this->sendOutput(json_encode(["error" => $strErrorDesc]), ['Content-Type: application/json', $strErrorHeader]);
-    }
+    $this->sendOutput($responseData, $httpHeaders);
   }
 
   public function listAction()

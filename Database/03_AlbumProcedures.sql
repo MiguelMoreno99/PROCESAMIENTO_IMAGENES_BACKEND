@@ -12,6 +12,21 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
+CREATE PROCEDURE verificar_estampa_reclamada(
+    IN in_uuid_jugador CHAR(36)
+)
+BEGIN
+    SELECT 
+        CORREO_USUARIO 
+    FROM 
+        TABLA_ESTAMPAS_USUARIO 
+    WHERE 
+        UUID_JUGADOR = in_uuid_jugador
+    LIMIT 1;
+END$$
+DELIMITER ;
+
+DELIMITER $$
 CREATE PROCEDURE traer_todas_estampas()
 BEGIN
     SELECT * FROM TABLA_ESTAMPA_JUGADOR;

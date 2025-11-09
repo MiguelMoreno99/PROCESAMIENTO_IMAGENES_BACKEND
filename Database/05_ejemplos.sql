@@ -84,6 +84,8 @@ select * from tabla_estampa_jugador;
 
 CALL reclamar_estampa_usuario("9fde6c3c-b9ee-11f0-8c89-18c04d6599ee","CORREO@EJEMPO.COM");
 
+CALL verificar_estampa_reclamada("9fde6c3c-b9ee-11f0-8c89-18c04d6599ee");
+
 CALL traer_todas_estampas();
 
 CALL listar_estampas_usuario("CORREO@EJEMPO.COM");
