@@ -15,11 +15,11 @@ select * from tabla_usuario;
 insert into tabla_estampa_jugador values
 (
 "b921a692-b9ed-11f0-8c89-18c04d6599ee",
-"http://192.168.100.13/BACKEND_PROCESAMIENTO_IMAGENES/img/paises/mexico.png",
+"https://gapless-thirdly-jovita.ngrok-free.dev/BACKEND_PROCESAMIENTO_IMAGENES/img/paises/mexico.png",
 "MEXICO",
 "MEX",
-"http://192.168.100.13/BACKEND_PROCESAMIENTO_IMAGENES/img/selecciones/mexicoSel.png",
-"http://192.168.100.13/BACKEND_PROCESAMIENTO_IMAGENES/img/jugadores/raul_jimenez.png",
+"https://gapless-thirdly-jovita.ngrok-free.dev/BACKEND_PROCESAMIENTO_IMAGENES/img/selecciones/mexicoSel.png",
+"https://gapless-thirdly-jovita.ngrok-free.dev/BACKEND_PROCESAMIENTO_IMAGENES/img/jugadores/raul_jimenez.png",
 "MEXICO NATIONAL FOOTBALL TEAM",
 "STRIKER (ST)",
 "ST",
